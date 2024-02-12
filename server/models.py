@@ -1,7 +1,7 @@
 from config import db
 
-class Superhero(db.Model):
-    __tablename__ = 'superheroes'
+class Cape(db.Model):
+    __tablename__ = 'capes'
 
     id = db.Column(db.Integer, primary_key = True)
     cape_name = db.Column(db.String, unique = True) #other constraints too, unique- no two rows can have same name
@@ -9,9 +9,9 @@ class Superhero(db.Model):
     powers = db.Column(db.String)
     allignment = db.Column(db.String)
 
-    team_id = db.Column(db.Integer, db.ForeignKey('teams.id')) #foreign key links each superhero (row) to a team in a one to many relationship
+    team_id = db.Column(db.Integer, db.ForeignKey('teams.id')) #foreign key links each Cape (row) to a team in a one to many relationship
 
-    def __repr__(self): #changes how a Superhero is printed
+    def __repr__(self): #changes how a Cape is printed
         return f'Name: {self.name}'
 
 class Team(db.Model):
