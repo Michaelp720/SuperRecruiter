@@ -40,7 +40,9 @@ def display_capes(id): #team details page
     displayed_team = display_team(id)
   else:
     displayed_team = "solo capes"
-  print(get_capes_on_team(id))
+  capes_on_team = get_capes_on_team(id)
+  for cape in capes_on_team:
+    print(cape)
   print("Cape ID: Show cape details")
   print(f"+: create a cape to join {displayed_team}")
   choice = get_cape_choice()
@@ -74,7 +76,7 @@ def display_cape_details(id, team): #cape details page
 
   print(f'{cape.cape_name} | {cape.classification} | {cape_status}')
   print("1: change teams")
-  print()
+  print("other: return to main menu")
 
 
 if __name__ == "__main__":
@@ -82,7 +84,7 @@ if __name__ == "__main__":
     migrate.init_app(app, db)
     
     display_welcome() #WELCOME PAGE
-    print(Team.query.filter(Team.team_name == "Team Sunburst").first().id) #1 expected
+    #print(Team.query.filter(Team.team_name == "Team Sunburst").first().id) #1 expected
 
     while True:
       display_main_menu() #MAIN PAGE
