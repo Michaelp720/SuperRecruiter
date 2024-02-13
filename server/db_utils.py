@@ -1,5 +1,5 @@
 from models import Cape, Team, db
-from pick import pick
+from simple_term_menu import TerminalMenu
 import sys
 
 
@@ -22,11 +22,19 @@ def change_capes_team(cape):
     team_names.append("no team")
     title = "Which team will they join?"
     #print(team_names)
-    new_team, index = pick(team_names, title)
+    #new_team, index = pick(team_names, title)
+    terminal_menu = TerminalMenu(team_names)
+    menu_entry_index = terminal_menu.show()
+    print(menu_entry_index)
+    new_team = team_names[menu_entry_index]
     if new_team != "no team":
-        cape.team_id = Team.query.filter(team_name == new_team).first().id
+        team_obj = Team.query.filter(Team.team_name == new_team).first()
+        cape.team_id = team_obj.id
+        cape.allignment = team_obj.allignment
+        print(f"{cape.cape_name} has joined the {cape.allignment} {team_names[menu_entry_index]}!")
     else:
         cape.team_id = None
+        print(f"{cape.cape_name} has gone solo")
     db.session.commit()
 
 def delete_cape(cape):

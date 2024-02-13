@@ -40,7 +40,7 @@ def display_all_teams(): #all teams page
 def get_team_choice():
   return input("Which team would you like to see? ")
 
-def display_capes(id): #team details page
+def display_capes(id): #team details page/solo capes
   if id:
     displayed_team = display_team(id)
   else:
@@ -69,12 +69,12 @@ def display_team(id): #header for team details page
 
 def display_cape_details(id, team, team_id): #cape details page
   cape = get_cape_by_id(id)
-  if cape.allignment == "Hero":
+  if cape.allignment == "Heroic":
     if cape.team_id:
       cape_status = f"Hero with {team}"
     else:
       cape_status = f'Vigilante'
-  elif cape.allignment == "Villain":
+  elif cape.allignment == "Villainous":
     if cape.team_id:
       cape_status = f"Villain with {team}"
     else:

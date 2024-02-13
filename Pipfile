@@ -14,6 +14,7 @@ sqlalchemy-serializer = "*"
 flask-cors = "*"
 werkzeug = "2.2.2"
 pick = "*"
+simple-term-menu = "*"
 
 [dev-packages]
 
