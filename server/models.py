@@ -23,4 +23,4 @@ class Team(db.Model):
     allignment = db.Column(db.String)
 
     def __repr__(self):
-        return f'{id} Name: {self.team_name}; allignment: {self.allignment}'
+        return f'{id} Name: {self.team_name} allignment: {self.allignment}'
