@@ -1,8 +1,8 @@
-from db_utils import get_all_teams, get_team_by_id, get_capes_on_team, get_cape_by_id, delete_cape
+from db_utils import get_all_teams, get_team_by_id, get_capes_on_team, get_cape_by_id, delete_cape, change_capes_team
 from config import app, migrate
 from models import Cape, Team, db
 
-#from rich import print
+from rich import print
 
 # Tasks:
 # 1. welcome page- show all teams, show all solo capes
@@ -14,13 +14,18 @@ from models import Cape, Team, db
 
 
 def display_welcome(): #welcome page
-  print("Welcome to Cape Recruiter! Setting/Ideas are from the world of Parahumans: you can start reading here https://parahumans.wordpress.com/ characters are OCs or AI generated")
+  print("Welcome to [bold #f3cf22]Cape Recruiter![/]")
+  f= open ('edited_capes.txt','r')
+  print(''.join([line for line in f]))
+  print("Setting/Ideas are from the world of Parahumans: you can start reading here https://parahumans.wordpress.com/")
+  print("Characters are OCs or AI generated")
+  print("")
 
 def display_main_menu(): #main page
-  print("[bold magenta]Main Menu[/]")
-  print("1: Show all teams")
-  print("2: Show solo capes")
-  print("x: Exit")
+  print("[bold #f3cf22]Main Menu[/]")
+  print("[bold cyan]1[/]: Show all teams")
+  print("[bold cyan]2[/]: Show solo capes")
+  print("[bold cyan]x[/]: Exit")
 
 def get_main_choice():
   return input("What would you like to do? ")
@@ -87,8 +92,8 @@ def display_cape_details(id, team, team_id): #cape details page
   if choice == "1":
     display_capes(team_id)
   elif choice == "2":
-    print("Update placeholder")
-    #change_capes_team(cape)
+    #print("Update placeholder")
+    change_capes_team(cape)
   elif choice == "-":
     delete_cape(cape)
 
