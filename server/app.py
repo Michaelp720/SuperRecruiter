@@ -50,7 +50,7 @@ def display_capes(id): #team details page
   if choice == "+":
     print("Create cape placeholder")
   else:
-    display_cape_details(choice, displayed_team, id)
+    display_cape_details(choice, displayed_team, id) #make error not cause exit?
 
 
 def get_cape_choice():

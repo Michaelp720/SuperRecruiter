@@ -21,6 +21,6 @@ def change_capes_team(cape):
     #new_team, index = pick(team_names, title)
 
 def delete_cape(cape):
-    print(f"deleting {cape}, id: {cape.id}")
+    print(f"{cape.name} deleted")
     Cape.query.filter(Cape.id == cape.id).delete()
     db.session.commit()
