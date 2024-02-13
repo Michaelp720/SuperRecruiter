@@ -1,4 +1,4 @@
-from db_utils import get_all_teams, get_team_by_id, get_capes_on_team, get_cape_by_id
+from db_utils import get_all_teams, get_team_by_id, get_capes_on_team, get_cape_by_id, delete_cape
 from config import app, migrate
 from models import Cape, Team, db
 
@@ -45,11 +45,12 @@ def display_capes(id): #team details page
     print(cape)
   print("Cape ID: Show cape details")
   print(f"+: create a cape to join {displayed_team}")
+  print("other: return to main menu")
   choice = get_cape_choice()
-  if choice != "+":
-    display_cape_details(choice, displayed_team)
+  if choice == "+":
+    print("Create cape placeholder")
   else:
-    pass
+    display_cape_details(choice, displayed_team, id)
 
 
 def get_cape_choice():
@@ -61,7 +62,7 @@ def display_team(id): #header for team details page
   return team.team_name
 
 
-def display_cape_details(id, team): #cape details page
+def display_cape_details(id, team, team_id): #cape details page
   cape = get_cape_by_id(id)
   if cape.allignment == "Hero":
     if cape.team_id:
@@ -75,9 +76,24 @@ def display_cape_details(id, team): #cape details page
       cape_status = f'Solo Villain'
 
   print(f'{cape.cape_name} | {cape.classification} | {cape_status}')
-  print("1: change teams")
+  if cape.team_id:
+    print(f"1: back to {team}")
+  else:
+    print("1: back to solo capes")
+  print(f"2: assign {cape.cape_name} to new team")
+  print(f"-: delete {cape.cape_name} permanently")
   print("other: return to main menu")
+  choice = get_cape_dets_choice()
+  if choice == "1":
+    display_capes(team_id)
+  elif choice == "2":
+    print("Update placeholder")
+    #change_capes_team(cape)
+  elif choice == "-":
+    delete_cape(cape)
 
+def get_cape_dets_choice():
+  return input("Selection: ")
 
 if __name__ == "__main__":
   with app.app_context():

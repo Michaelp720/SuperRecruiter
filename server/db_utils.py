@@ -1,4 +1,5 @@
 from models import Cape, Team, db
+#from pick import pick
 
 
 def get_all_teams():
@@ -12,4 +13,14 @@ def get_capes_on_team(id):
     return Cape.query.filter(Cape.team_id == id)    
 
 def get_cape_by_id(id):
-    return Cape.query.filter(Cape.id == id) 
+    return Cape.query.filter(Cape.id == id).first()
+
+def change_capes_team(cape):
+    team_names = [team.team_name for team in get_all_teams()]
+    team_names.append("no team")
+    #new_team, index = pick(team_names, title)
+
+def delete_cape(cape):
+    print(f"deleting {cape}, id: {cape.id}")
+    Cape.query.filter(Cape.id == cape.id).delete()
+    db.session.commit()
