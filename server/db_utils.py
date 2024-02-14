@@ -93,4 +93,4 @@ def create_team():
 
     db.session.add(team)
     db.session.commit()
-    print(f"{name_input} has been created")
+    print(f"{name_input} has been created. View all capes to recruit") #placeholder, will become recruiting game
