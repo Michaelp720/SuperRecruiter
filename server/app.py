@@ -25,6 +25,7 @@ def display_main_menu(): #main page
   print("[bold #f3cf22]Main Menu[/]")
   print("[bold cyan]1[/]: Show all teams")
   print("[bold cyan]2[/]: Show solo capes")
+  print("[bold cyan]3[/]: Show all capes")
   print("[bold cyan]+[/]: Create new team") #will become recruiting game
   print("[bold cyan]x[/]: Exit")
 
@@ -42,19 +43,25 @@ def get_team_choice():
   return input("Which team would you like to see? ")
 
 def display_capes(id): #team details page/solo capes
-  if id:
-    displayed_team = display_team(id)
-  else:
+  if not id:
     displayed_team = "solo capes"
+  elif id == "All":
+    displayed_team = "all capes"
+  else:
+    displayed_team = display_team(id)
+    
   capes_on_team = get_capes_on_team(id)
   for cape in capes_on_team:
     print(cape)
   print("Cape ID: Show cape details")
   print(f"+: create a cape to join {displayed_team}")
+  print("x: return to main menu")
   print("other: quit app")
   choice = get_cape_choice()
   if choice == "+":
-    create_cape(id)
+    display_capes(create_cape(id))
+  elif choice == "x":
+    start_main_menu()
   else:
     display_cape_details(choice, displayed_team, id) #make error not cause exit?
 
@@ -111,6 +118,8 @@ def start_main_menu():
         display_all_teams()
       elif choice == "2":
         display_capes(None)
+      elif choice == "3":
+        display_capes("All")
       elif choice == "+":
         create_team()
       elif choice == "x":
