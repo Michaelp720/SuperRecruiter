@@ -7,7 +7,7 @@ from rich.console import Console
 from rich.columns import Columns
 from rich.panel import Panel
 
-from styles import page_heading_style, cape_panel
+from styles import page_heading_style, cape_panel, team_panel
 
 # Tasks:
 # 1. welcome page- show all teams, show all solo capes
@@ -41,8 +41,10 @@ def get_main_choice():
 
 def display_all_teams(): #all teams page
   teams = get_all_teams()
-  for team in teams:
-    print(team)  ##################################
+  
+  team_renders = [Panel(team_panel(team)) for team in teams]
+  console.print(Columns(team_renders))
+
   display_capes(get_team_choice())
 
 
@@ -50,12 +52,15 @@ def get_team_choice():
   return input("Which team would you like to see? ")
 
 def display_capes(id): #team details page/solo capes
+  print("")
   if not id:
     displayed_team = "solo capes"
     is_all = False
+    print("[bold]Solo Capes[/]")
   elif id == "All":
     displayed_team = "all capes"
     is_all = True
+    print("[bold]All Capes[/]")
   else:
     displayed_team = display_team(id)
     is_all = False
@@ -64,8 +69,6 @@ def display_capes(id): #team details page/solo capes
 
   cape_renders = [Panel(cape_panel(cape, is_all)) for cape in capes_on_team]
   console.print(Columns(cape_renders))
-  # for cape in capes_on_team:
-  #   print(cape)   #######################################
 
   print("[bold green]Cape ID[/]: Show cape details")
   print(f"[bold green]+[/]: create a cape to join {displayed_team}")
@@ -85,7 +88,10 @@ def get_cape_choice():
 
 def display_team(id): #header for team details page
   team = get_team_by_id(id)
-  print(f'{team.team_name} {team.allignment}')
+  if team.allignment == "Heroic":
+    console.print(f'{team.team_name}', style = page_heading_style)
+  else:
+    console.print(f'{team.team_name}', style = villainous_page_heading_style)
   return team.team_name
 
 

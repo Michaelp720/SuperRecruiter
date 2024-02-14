@@ -6,9 +6,11 @@ from db_utils import get_cape_status
 
 
 page_heading_style = Style(color = "#E4C31C", bold = True)
+villainous_page_heading_style = Style(color = "#872667", bold = True)
+
 
 #colors
-#Heros and menu titles: E4C31C
+#Heros and menu titles: #E4C31C
 #Villains: #872667
 #options: green
 
@@ -29,3 +31,14 @@ def cape_panel(cape, is_all):
         return f"[bold green]{id}[/]: [bold]{name}[/]\n{classification}\n{cape_status}"
     else:
         return f"[bold green]{id}[/]: [bold]{name}[/]\n{classification}"
+
+def team_panel(team):
+    id = team.id
+    allignment = team.allignment
+    team_name = f"[bold]{team.team_name}[/]"
+    if allignment == "Heroic":
+        allignment_display = f"[#E4C31C]Heroic[/]"
+    elif allignment == "Villainous":
+        allignment_display = f"[#872667]Villainous[/]"
+
+    return f"[bold green]{id}[/]: {team_name}\n{allignment_display}"
