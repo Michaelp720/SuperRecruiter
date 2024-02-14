@@ -94,3 +94,18 @@ def create_team():
     db.session.add(team)
     db.session.commit()
     print(f"{name_input} has been created. View all capes to recruit") #placeholder, will become recruiting game
+
+
+def get_cape_status(allignment, team_name, team_id):
+    if allignment == "Heroic":
+        if team_id:
+            cape_status = f"[#A1B8CE]Hero with[/] [#E4C31C]{team_name}[/]"
+        else:
+            cape_status = f"[#A1B8CE]Vigilante[/]"
+    elif allignment == "Villainous":
+        if team_id:
+            cape_status = f"[#A1B8CE]Villain with[/] [#872667]{team_name}[/]"
+        else:
+            cape_status = f"[#A1B8CE]Solo Villain[/]"
+
+    return cape_status

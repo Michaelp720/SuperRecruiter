@@ -15,6 +15,7 @@ class Cape(db.Model):
     def __repr__(self): #changes how a Cape is printed
         return f'{self.id}: Name: {self.cape_name} Classification: {self.classification} Powers: {self.powers}'
 
+
 class Team(db.Model):
     __tablename__ = 'teams'
 
