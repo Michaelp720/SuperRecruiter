@@ -1,6 +1,6 @@
 from models import Cape, Team, db
 from simple_term_menu import TerminalMenu
-import sys
+import sys 
 
 
 sys.settrace
@@ -12,7 +12,10 @@ def get_team_by_id(id):
     return Team.query.filter(Team.id == id).first()
 
 def get_capes_on_team(id):
-    return Cape.query.filter(Cape.team_id == id)    
+    if id == "All":
+        return Cape.query.all()
+    else:
+        return Cape.query.filter(Cape.team_id == id)    
 
 def get_cape_by_id(id):
     return Cape.query.filter(Cape.id == id).first()
@@ -32,6 +35,7 @@ def change_capes_team(cape):
         cape.team_id = None
         print(f"{cape.cape_name} has gone solo")
     db.session.commit()
+    return cape.team_id
 
 def delete_cape(cape):
     print(f"{cape.name} deleted")
@@ -44,16 +48,18 @@ def create_cape(team_id):
     print("Learn more about Parahumans power classifications: https://worm.fandom.com/wiki/Power_Classifications")
     classification_input = input("Classifications: ") #add terminal menu to choose classifications?
 
-    if team_id:
-        allignment_input = Team.query.filter(Team.id == team_id).first().allignment
-    else:
+    if not team_id:
         print(f"How does {name_input} allign?")
         allignment_options = ["Heroic", "Villainous"]
         terminal_menu = TerminalMenu(allignment_options)
         menu_entry_index = terminal_menu.show()
         allignment_input = allignment_options[menu_entry_index]
+    elif team_id == "All":
+        allignment_input = None
+    else:
+        allignment_input = Team.query.filter(Team.id == team_id).first().allignment
 
-    cape = Cape(
+    new_cape = Cape(
         cape_name = name_input,
         classification = classification_input,
         powers = powers_input,
@@ -61,13 +67,16 @@ def create_cape(team_id):
         team_id = team_id
     )
 
-    db.session.add(cape)
+    if team_id == "All":
+        team_id = change_capes_team(new_cape)
+
+    db.session.add(new_cape)
     db.session.commit()
     if team_id:
         print(f"{name_input} has joined {Team.query.filter(Team.id == team_id).first().team_name}")
     else:
         print(f"{name_input} has been created")
-    display_capes(team_id)
+    return team_id
 
 def create_team():
     name_input = input("Team name: ")
