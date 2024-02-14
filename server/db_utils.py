@@ -20,12 +20,8 @@ def get_cape_by_id(id):
 def change_capes_team(cape):
     team_names = [team.team_name for team in get_all_teams()]
     team_names.append("no team")
-    title = "Which team will they join?"
-    #print(team_names)
-    #new_team, index = pick(team_names, title)
     terminal_menu = TerminalMenu(team_names)
     menu_entry_index = terminal_menu.show()
-    print(menu_entry_index)
     new_team = team_names[menu_entry_index]
     if new_team != "no team":
         team_obj = Team.query.filter(Team.team_name == new_team).first()
@@ -41,3 +37,51 @@ def delete_cape(cape):
     print(f"{cape.name} deleted")
     Cape.query.filter(Cape.id == cape.id).delete()
     db.session.commit()
+
+def create_cape(team_id):
+    name_input = input("Cape name: ")
+    powers_input = input(f"Describe {name_input}'s powers: ")
+    print("Learn more about Parahumans power classifications: https://worm.fandom.com/wiki/Power_Classifications")
+    classification_input = input("Classifications: ") #add terminal menu to choose classifications?
+
+    if team_id:
+        allignment_input = Team.query.filter(Team.id == team_id).first().allignment
+    else:
+        print(f"How does {name_input} allign?")
+        allignment_options = ["Heroic", "Villainous"]
+        terminal_menu = TerminalMenu(allignment_options)
+        menu_entry_index = terminal_menu.show()
+        allignment_input = allignment_options[menu_entry_index]
+
+    cape = Cape(
+        cape_name = name_input,
+        classification = classification_input,
+        powers = powers_input,
+        allignment = allignment_input,
+        team_id = team_id
+    )
+
+    db.session.add(cape)
+    db.session.commit()
+    if team_id:
+        print(f"{name_input} has joined {Team.query.filter(Team.id == team_id).first().team_name}")
+    else:
+        print(f"{name_input} has been created")
+    display_capes(team_id)
+
+def create_team():
+    name_input = input("Team name: ")
+    print(f"How does {name_input} allign?")
+    allignment_options = ["Heroic", "Villainous"]
+    terminal_menu = TerminalMenu(allignment_options)
+    menu_entry_index = terminal_menu.show()
+    allignment_input = allignment_options[menu_entry_index]
+
+    team = Team(
+        team_name = name_input,
+        allignment = allignment_input
+    )
+
+    db.session.add(team)
+    db.session.commit()
+    print(f"{name_input} has been created")

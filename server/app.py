@@ -1,4 +1,4 @@
-from db_utils import get_all_teams, get_team_by_id, get_capes_on_team, get_cape_by_id, delete_cape, change_capes_team
+from db_utils import get_all_teams, get_team_by_id, get_capes_on_team, get_cape_by_id, delete_cape, change_capes_team, create_cape, create_team
 from config import app, migrate
 from models import Cape, Team, db
 
@@ -25,6 +25,7 @@ def display_main_menu(): #main page
   print("[bold #f3cf22]Main Menu[/]")
   print("[bold cyan]1[/]: Show all teams")
   print("[bold cyan]2[/]: Show solo capes")
+  print("[bold cyan]+[/]: Create new team") #will become recruiting game
   print("[bold cyan]x[/]: Exit")
 
 def get_main_choice():
@@ -50,10 +51,10 @@ def display_capes(id): #team details page/solo capes
     print(cape)
   print("Cape ID: Show cape details")
   print(f"+: create a cape to join {displayed_team}")
-  print("other: return to main menu")
+  print("other: quit app")
   choice = get_cape_choice()
   if choice == "+":
-    print("Create cape placeholder")
+    create_cape(id)
   else:
     display_cape_details(choice, displayed_team, id) #make error not cause exit?
 
@@ -96,26 +97,31 @@ def display_cape_details(id, team, team_id): #cape details page
     change_capes_team(cape)
   elif choice == "-":
     delete_cape(cape)
+  else:
+    start_main_menu()
 
 def get_cape_dets_choice():
   return input("Selection: ")
 
-if __name__ == "__main__":
-  with app.app_context():
-    migrate.init_app(app, db)
-    
-    display_welcome() #WELCOME PAGE
-    #print(Team.query.filter(Team.team_name == "Team Sunburst").first().id) #1 expected
-
-    while True:
+def start_main_menu():
+  while True:
       display_main_menu() #MAIN PAGE
       choice = get_main_choice()
       if choice == "1":
         display_all_teams()
       elif choice == "2":
         display_capes(None)
+      elif choice == "+":
+        create_team()
       elif choice == "x":
         break
+
+if __name__ == "__main__":
+  with app.app_context():
+    migrate.init_app(app, db)
+    
+    display_welcome() #WELCOME PAGE
+    start_main_menu()
       
 
 
