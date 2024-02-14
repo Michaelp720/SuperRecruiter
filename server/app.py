@@ -1,8 +1,8 @@
-from db_utils import get_all_teams, get_team_by_id, get_capes_on_team, get_cape_by_id
+from db_utils import get_all_teams, get_team_by_id, get_capes_on_team, get_cape_by_id, delete_cape, change_capes_team, create_cape, create_team
 from config import app, migrate
 from models import Cape, Team, db
 
-#from rich import print
+from rich import print
 
 # Tasks:
 # 1. welcome page- show all teams, show all solo capes
@@ -14,13 +14,19 @@ from models import Cape, Team, db
 
 
 def display_welcome(): #welcome page
-  print("Welcome to Cape Recruiter! Setting/Ideas are from the world of Parahumans: you can start reading here https://parahumans.wordpress.com/ characters are OCs or AI generated")
+  print("Welcome to [bold #f3cf22]Cape Recruiter![/]")
+  f= open ('edited_capes.txt','r')
+  print(''.join([line for line in f]))
+  print("Setting/Ideas are from the world of Parahumans: you can start reading here https://parahumans.wordpress.com/")
+  print("Characters are OCs or AI generated")
+  print("")
 
 def display_main_menu(): #main page
-  print("[bold magenta]Main Menu[/]")
-  print("1: Show all teams")
-  print("2: Show solo capes")
-  print("x: Exit")
+  print("[bold #f3cf22]Main Menu[/]")
+  print("[bold cyan]1[/]: Show all teams")
+  print("[bold cyan]2[/]: Show solo capes")
+  print("[bold cyan]+[/]: Create new team") #will become recruiting game
+  print("[bold cyan]x[/]: Exit")
 
 def get_main_choice():
   return input("What would you like to do? ")
@@ -35,7 +41,7 @@ def display_all_teams(): #all teams page
 def get_team_choice():
   return input("Which team would you like to see? ")
 
-def display_capes(id): #team details page
+def display_capes(id): #team details page/solo capes
   if id:
     displayed_team = display_team(id)
   else:
@@ -45,11 +51,12 @@ def display_capes(id): #team details page
     print(cape)
   print("Cape ID: Show cape details")
   print(f"+: create a cape to join {displayed_team}")
+  print("other: quit app")
   choice = get_cape_choice()
-  if choice != "+":
-    display_cape_details(choice, displayed_team)
+  if choice == "+":
+    create_cape(id)
   else:
-    pass
+    display_cape_details(choice, displayed_team, id) #make error not cause exit?
 
 
 def get_cape_choice():
@@ -61,40 +68,60 @@ def display_team(id): #header for team details page
   return team.team_name
 
 
-def display_cape_details(id, team): #cape details page
+def display_cape_details(id, team, team_id): #cape details page
   cape = get_cape_by_id(id)
-  if cape.allignment == "Hero":
+  if cape.allignment == "Heroic":
     if cape.team_id:
       cape_status = f"Hero with {team}"
     else:
       cape_status = f'Vigilante'
-  elif cape.allignment == "Villain":
+  elif cape.allignment == "Villainous":
     if cape.team_id:
       cape_status = f"Villain with {team}"
     else:
       cape_status = f'Solo Villain'
 
   print(f'{cape.cape_name} | {cape.classification} | {cape_status}')
-  print("1: change teams")
+  if cape.team_id:
+    print(f"1: back to {team}")
+  else:
+    print("1: back to solo capes")
+  print(f"2: assign {cape.cape_name} to new team")
+  print(f"-: delete {cape.cape_name} permanently")
   print("other: return to main menu")
+  choice = get_cape_dets_choice()
+  if choice == "1":
+    display_capes(team_id)
+  elif choice == "2":
+    #print("Update placeholder")
+    change_capes_team(cape)
+  elif choice == "-":
+    delete_cape(cape)
+  else:
+    start_main_menu()
 
+def get_cape_dets_choice():
+  return input("Selection: ")
 
-if __name__ == "__main__":
-  with app.app_context():
-    migrate.init_app(app, db)
-    
-    display_welcome() #WELCOME PAGE
-    #print(Team.query.filter(Team.team_name == "Team Sunburst").first().id) #1 expected
-
-    while True:
+def start_main_menu():
+  while True:
       display_main_menu() #MAIN PAGE
       choice = get_main_choice()
       if choice == "1":
         display_all_teams()
       elif choice == "2":
         display_capes(None)
+      elif choice == "+":
+        create_team()
       elif choice == "x":
         break
+
+if __name__ == "__main__":
+  with app.app_context():
+    migrate.init_app(app, db)
+    
+    display_welcome() #WELCOME PAGE
+    start_main_menu()
       
 
 

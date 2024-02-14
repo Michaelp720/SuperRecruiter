@@ -9,6 +9,12 @@ flask-sqlalchemy = "*"
 flask-migrate = "*"
 python-dotenv = "*"
 ipdb = "*"
+rich = "*"
+sqlalchemy-serializer = "*"
+flask-cors = "*"
+werkzeug = "2.2.2"
+pick = "*"
+simple-term-menu = "*"
 
 [dev-packages]
 
