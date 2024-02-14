@@ -56,14 +56,14 @@ def display_capes(id): #team details page/solo capes
   print("Cape ID: Show cape details")
   print(f"+: create a cape to join {displayed_team}")
   print("x: return to main menu")
-  print("other: quit app")
+  print("other: quit app") #bug? or feature ;)
   choice = get_cape_choice()
   if choice == "+":
     display_capes(create_cape(id))
   elif choice == "x":
     start_main_menu()
   else:
-    display_cape_details(choice, displayed_team, id) #make error not cause exit?
+    display_cape_details(choice, displayed_team, id)
 
 
 def get_cape_choice():
@@ -100,7 +100,6 @@ def display_cape_details(id, team, team_id): #cape details page
   if choice == "1":
     display_capes(team_id)
   elif choice == "2":
-    #print("Update placeholder")
     change_capes_team(cape)
   elif choice == "-":
     delete_cape(cape)
