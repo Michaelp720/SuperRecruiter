@@ -8,6 +8,7 @@ if __name__ == "__main__":
     Cape.query.delete()
     Team.query.delete()
     ActionEffect.query.delete()
+    print("all db data deleted")
 
     new_teams = [
       Team(
@@ -348,3 +349,4 @@ if __name__ == "__main__":
 
     db.session.add_all(qualities)
     db.session.commit()
+    print("db seeded")

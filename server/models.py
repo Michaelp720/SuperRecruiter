@@ -30,7 +30,7 @@ class Team(db.Model):
     __tablename__ = 'teams'
 
     id = db.Column(db.Integer, primary_key = True)
-    team_name = db.Column(db.String) 
+    team_name = db.Column(db.String, unique = True) 
     allignment = db.Column(db.String)
 
     def __repr__(self):

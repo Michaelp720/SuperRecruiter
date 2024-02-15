@@ -12,7 +12,7 @@ def get_team_by_id(id):
     return Team.query.filter(Team.id == id).first()
 
 def get_capes_on_team(id):
-    if id == "All":
+    if id == "All" or id == "game":
         return Cape.query.all()
     else:
         return Cape.query.filter(Cape.team_id == id)    
@@ -79,7 +79,7 @@ def create_cape(team_id):
     return team_id
 
 def create_team():
-    name_input = input("Team name: ")
+    name_input = input("What will your team be named? ")
     print(f"How does {name_input} allign?")
     allignment_options = ["Heroic", "Villainous"]
     terminal_menu = TerminalMenu(allignment_options)
@@ -93,7 +93,8 @@ def create_team():
 
     db.session.add(team)
     db.session.commit()
-    print(f"{name_input} has been created. View all capes to recruit") #placeholder, will become recruiting game
+    print(f"{name_input} has been created") #placeholder, will become recruiting game
+    return Team.query.filter(Team.team_name == name_input)
 
 
 def get_cape_status(allignment, team_name, team_id):
@@ -109,3 +110,8 @@ def get_cape_status(allignment, team_name, team_id):
             cape_status = f"[#A1B8CE]Solo Villain[/]"
 
     return cape_status
+
+def handle_recruiting(cape, my_team):
+    cape.team_id = my_team.id
+    cape.allignment = my_team.allignment
+    db.session.commit()

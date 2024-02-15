@@ -2,6 +2,7 @@
 
 from models import Cape, ActionEffect, db
 from config import app, migrate
+from random import randint
 
 actions = ("ambush", "outwit", "overpower", "convince", "extort", "bribe")
 
@@ -39,7 +40,7 @@ def get_difficulty(cape, action):
     adjustment = 0
     for c in strengths:
         adjustment += getattr(ActionEffect.query.filter(ActionEffect.quality_name == c).first(), action)
-        print(f"adjustment for {action}, {c}: {getattr(ActionEffect.query.filter(ActionEffect.quality_name == c).first(), action)}")
+        #print(f"adjustment for {action}, {c}: {getattr(ActionEffect.query.filter(ActionEffect.quality_name == c).first(), action)}")
 
     if allignment == "Heroic":
         adjustment += getattr(ActionEffect.query.filter(ActionEffect.quality_name == "Heroic").first(), action)
@@ -61,5 +62,16 @@ def get_difficulty(cape, action):
     
 
     
-#     print(get_difficulty("ambush"))
+#     print(get_difficulty(Cape.query.filter(Cape.cape_name == "Typhon").first(), "ambush"))
 #     print("6.5 expected")
+
+def recruitment_success(cape, action):
+    difficulty = get_difficulty(cape, action)
+    print(difficulty)
+    roll = randint(1, 20) #balancing? dnd is probaly balanced
+    if roll == 1:
+        return False
+    if roll > difficulty or roll == 20:
+        return True
+    else:
+        return False
