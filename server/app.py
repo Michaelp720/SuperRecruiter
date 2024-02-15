@@ -8,14 +8,12 @@ from rich.columns import Columns
 from rich.panel import Panel
 from recruitment import recruitment_success
 from simple_term_menu import TerminalMenu
+import time
 
 from styles import page_heading_style, villainous_page_heading_style, cape_panel, team_panel, print_recruit_success, print_recruit_failure, print_attempting_recruit
 
 # Tasks:
-# 1. show cape powers in recruiting and details
-# 1. show capes on team in recruiting
-# 1. slow print panels
-# 2. don't show capes on team already in game display capes
+# 2. don't show capes on team already in display game capes
 # 2. change create cape to work with new classification
 # 3. error routing and handling
 
@@ -24,10 +22,13 @@ console = Console()
 def display_welcome(): #welcome page
   console.print("Welcome to Cape Recruiter!", justify = "center", style = page_heading_style)
   print("")
+  time.sleep(1)
   f= open ('edited_capes.txt','r')
-  print(''.join([line for line in f])) #slow print
+  print(''.join([line for line in f]))
+  time.sleep(1.5)
   print("Setting/Ideas are from the world of Parahumans: you can start reading here https://parahumans.wordpress.com/")
   print("Characters are OCs or AI generated")
+  time.sleep(1)
   print("")
 
 def display_main_menu(): #main page
@@ -44,7 +45,7 @@ def get_main_choice():
 def display_all_teams(): #all teams page
   teams = get_all_teams()
   
-  team_renders = [Panel(team_panel(team)) for team in teams] #slow print? each panel?
+  team_renders = [Panel(team_panel(team)) for team in teams]
   console.print(Columns(team_renders))
   choice = get_team_choice()
   display_capes(choice, Team.query.filter(Team.id == choice).first())
@@ -97,7 +98,8 @@ def display_capes(id, my_team): #team details page/solo capes ###############
     if choice == "+":
       display_capes(create_cape(id), None)
     elif choice == "r":
-      display_capes("game", my_team)
+      #display_capes("game", my_team)
+      display_game_menu(my_team)
     elif choice == "x":
       start_main_menu()
     else:
@@ -127,13 +129,16 @@ def display_team(id): #header for team details page
 def display_cape_details(id, team, team_id): #cape details page
   cape = get_cape_by_id(id)
 
-  cape_status = get_cape_status(cape.allignment, team, cape.team_id)
+  #cape_status = get_cape_status(cape.allignment, team, cape.team_id)
 
-  print(f'{cape.cape_name} | {cape.classification} | {cape_status}')
-  print(f"1: back to {team}")
-  print(f"2: assign {cape.cape_name} to new team")
-  print(f"-: delete {cape.cape_name} permanently")
-  print("other: return to main menu")
+  #print(f'{cape.cape_name} | {cape.classification} | {cape_status}')
+  console.print(Panel(cape_panel(cape, True)))
+  print(f"   [bold #EB9F25]POWERS[/]: {cape.powers}")
+  print("")
+  print(f"[bold green]1[/]: back to {team}")
+  print(f"[bold green]2[/]: assign {cape.cape_name} to new team")
+  print(f"[bold green]-[/]: delete {cape.cape_name} permanently")
+  print("[bold green]other[/]: return to main menu")
   choice = get_cape_dets_choice()
   if choice == "1":
     display_capes(team_id, team)
@@ -154,6 +159,10 @@ def start_game():
 
   
 def display_game_menu(my_team):
+
+  capes_on_team = get_capes_on_team(my_team.id)
+  cape_renders = [Panel(cape_panel(cape, True)) for cape in capes_on_team]
+  console.print(Columns(cape_renders))
   print(f"Recruiting for [bold #EB9F25]{my_team.team_name}[/]")
   print("[bold green]+[/]: attempt to recruit")
   print("[bold green]other[/]: Return to main menu")
@@ -167,6 +176,8 @@ def get_game_choice():
 
 def attempt_recruitment(target_cape, my_team):
   console.print(Panel(cape_panel(target_cape, True)))
+  print(f"   [bold #EB9F25]POWERS[/]: {target_cape.powers}")
+  print("")
   print(f"How will you try to recruit {target_cape.cape_name}?")
   action_choice = get_action_choice()
   success = recruitment_success(target_cape, action_choice)
