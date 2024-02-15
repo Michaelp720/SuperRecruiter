@@ -67,8 +67,9 @@ def get_difficulty(cape, action):
 
 def recruitment_success(cape, action):
     difficulty = get_difficulty(cape, action)
-    print(difficulty)
+    print(f"adjusted difficulty: {difficulty}")
     roll = randint(1, 20) #balancing? dnd is probaly balanced
+    print(F"roll: {roll}")
     if roll == 1:
         return False
     if roll > difficulty or roll == 20:

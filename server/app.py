@@ -9,11 +9,13 @@ from rich.panel import Panel
 from recruitment import recruitment_success
 from simple_term_menu import TerminalMenu
 
-from styles import page_heading_style, cape_panel, team_panel
+from styles import page_heading_style, villainous_page_heading_style, cape_panel, team_panel, print_recruit_success, print_recruit_failure, print_attempting_recruit
 
 # Tasks:
-# 1. squash some routing bugs
-# 1. add slow print and pause before success/failure
+# 1. show cape powers in recruiting and details
+# 1. show capes on team in recruiting
+# 1. slow print panels
+# 2. don't show capes on team already in game display capes
 # 2. change create cape to work with new classification
 # 3. error routing and handling
 
@@ -23,7 +25,7 @@ def display_welcome(): #welcome page
   console.print("Welcome to Cape Recruiter!", justify = "center", style = page_heading_style)
   print("")
   f= open ('edited_capes.txt','r')
-  print(''.join([line for line in f]))
+  print(''.join([line for line in f])) #slow print
   print("Setting/Ideas are from the world of Parahumans: you can start reading here https://parahumans.wordpress.com/")
   print("Characters are OCs or AI generated")
   print("")
@@ -42,7 +44,7 @@ def get_main_choice():
 def display_all_teams(): #all teams page
   teams = get_all_teams()
   
-  team_renders = [Panel(team_panel(team)) for team in teams]
+  team_renders = [Panel(team_panel(team)) for team in teams] #slow print? each panel?
   console.print(Columns(team_renders))
   choice = get_team_choice()
   display_capes(choice, Team.query.filter(Team.id == choice).first())
@@ -168,9 +170,15 @@ def attempt_recruitment(target_cape, my_team):
   print(f"How will you try to recruit {target_cape.cape_name}?")
   action_choice = get_action_choice()
   success = recruitment_success(target_cape, action_choice)
+  if action_choice == "ambush" or action_choice == "outwit" or action_choice == "overpower":
+    action_type = "defeat"
+  elif action_choice == "convince" or action_choice == "extort" or action_choice == "bribe":
+    action_type = "persuade"
+
+  print_attempting_recruit(action_type, target_cape.cape_name)
 
   if success:
-    if action_choice == "ambush" or action_choice == "outwit" or action_choice == "overpower":
+    if action_type == "defeat":
       if target_cape.allignment == "Heroic":
         allignment_adj = "Impressed"
       elif target_cape.allignment == "Villainous":
@@ -180,9 +188,11 @@ def attempt_recruitment(target_cape, my_team):
       elif action_choice == "outwit":
         adjective = "strategy,"
       elif action_choice == "overpower":
-        adjective = "strength,"
-      print(f"{target_cape.cape_name} was defeated! {allignment_adj} by your {adjective} they agree to join [bold #EB9F25]{my_team.team_name}[/]")
-    else:
+        adjective = "strength,"  
+      print_msg = f"{target_cape.cape_name} was defeated! {allignment_adj} by your {adjective} they agree to join "
+      print_recruit_success(print_msg, my_team.team_name)
+      
+    elif action_type == "persuade":
       if action_choice == "convince":
         persuasion_adj = "your pitch,"
       elif action_choice == "extort":
@@ -192,19 +202,23 @@ def attempt_recruitment(target_cape, my_team):
           persuasion_adj = "the threat of embarassment,"
       elif action_choice == "bribe":
         persuasion_adj = "their greed,"
-      print(f"{target_cape.cape_name} was persuaded! Swayed by {persuasion_adj} they agree to join [bold #EB9F25]{my_team.team_name}[/]")
+  
+      print_msg = f"{target_cape.cape_name} was persuaded! Swayed by {persuasion_adj} they agree to join "
+      print_recruit_success(print_msg, my_team.team_name)
+
     handle_recruiting(target_cape, my_team)
     
-  else:
-    if action_choice == "ambush" or "outwit" or "overpower":
+  elif not success:
+    if action_type == "defeat":
       if target_cape.allignment == "Heroic":
-        failure_msg = "have you sent to the Birdcage."
+        failure_msg_end = "have you sent to the Birdcage."
         color = "#E4C31C"
       elif target_cape.allignment == "Villainous": 
-        failure_msg = "end you right here."
+        failure_msg_end = "end you right here."
         color = "#872667"
-      print(f"[#A1B8CE]{target_cape.cape_name}[/]: [bold {color}]'You're lucky I don't {failure_msg}'[/]")
-    else:
+      #slow print  
+      failure_msg = f"'You're lucky I don't {failure_msg_end}'"
+    elif action_type == "persuade":
       if target_cape.allignment == "Heroic":
         allignment_msg = "won't work!"
         villain_flair = ""
@@ -219,7 +233,10 @@ def attempt_recruitment(target_cape, my_team):
         action_msg = "pressure me"
       elif action_choice == "bribe":
         action_msg = "buy me off"
-      print(f"[#A1B8CE]{target_cape.cape_name}[/]: [bold {color}]'Your {villain_flair}attempt to {action_msg} {allignment_msg}'[/]")
+      #slow print 
+      failure_msg = f'Your {villain_flair}attempt to {action_msg} {allignment_msg}'
+    print(f"[#A1B8CE]{target_cape.cape_name}[/]:")
+    print_recruit_failure(color, failure_msg)
   print("")
   display_game_menu(my_team)
 
@@ -230,6 +247,7 @@ def get_action_choice():
   return action_options[menu_entry_index]
 
 def start_main_menu():
+  #print_attempting_recruit("defeat", "Fallen Angel")
   while True:
       display_main_menu() #MAIN PAGE
       choice = get_main_choice()
