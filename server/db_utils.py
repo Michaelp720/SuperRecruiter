@@ -1,5 +1,6 @@
 from models import Cape, Team, db
 from simple_term_menu import TerminalMenu
+from random import randint
 import sys 
 
 
@@ -11,9 +12,11 @@ def get_all_teams():
 def get_team_by_id(id):
     return Team.query.filter(Team.id == id).first()
 
-def get_capes_on_team(id):
-    if id == "All" or id == "game":
+def get_capes_on_team(id, team):
+    if id == "All":
         return Cape.query.all()
+    elif id == "game":
+        return Cape.query.filter(Cape.team_id != team.id)
     else:
         return Cape.query.filter(Cape.team_id == id)    
 
@@ -45,8 +48,8 @@ def delete_cape(cape):
 def create_cape(team_id):
     name_input = input("Cape name: ")
     powers_input = input(f"Describe {name_input}'s powers: ")
-    print("Learn more about Parahumans power classifications: https://worm.fandom.com/wiki/Power_Classifications")
-    classification_input = input("Classifications: ") #add terminal menu to choose classifications?
+    print("")
+    classification_input = get_classification_input()
 
     if not team_id:
         print(f"How does {name_input} allign?")
@@ -115,3 +118,47 @@ def handle_recruiting(cape, my_team):
     cape.team_id = my_team.id
     cape.allignment = my_team.allignment
     db.session.commit()
+
+def get_classification_input():
+    print("Learn more about Parahuman power classifications: https://worm.fandom.com/wiki/Power_Classifications")
+    print("")
+    print(f"Which Classifications do these powers fall under? Rating will be randomly generated")
+    classification_input = {}
+    classification_options = ["Thinker", "Stranger", "Master", "Brute", "Shaker", "Mover", "Breaker","Tinker", "Blaster", "Striker", "Changer", "Trump"]
+    terminal_menu = TerminalMenu(classification_options)
+    menu_entry_index = terminal_menu.show()
+    classification_input[classification_options[menu_entry_index]] = randint(1, 13) #refine rng
+    adjusted_options = [c for c in classification_options if classification_options.index(c) != menu_entry_index]
+    adjusted_options.append("no further classifications")
+    #final_classes = get_additional_classification(adjusted_options, classification_input)
+    final_classes = while_additional_classes(adjusted_options, classification_input)
+    return final_classes
+
+
+# def get_additional_classification(adj_options, class_inputs):
+#     print(class_inputs)
+#     print("Any other Classifications? ")
+#     terminal_menu = TerminalMenu(adj_options)
+#     menu_entry_index = terminal_menu.show()
+#     if adj_options[menu_entry_index] == "no further classifications":
+#         print(f"here: {class_inputs}")
+#         return class_inputs
+#     else:
+#         class_inputs[adj_options[menu_entry_index]] = randint(1, 13)
+#         adj_options = [c for c in adj_options if adj_options.index(c) != menu_entry_index]
+#         get_additional_classification(adj_options, class_inputs)
+
+def while_additional_classes(adj_options, class_inputs):
+    menu_entry_index = 0
+    while True:
+        print("")
+        print(class_inputs)
+        print("Any other Classifications? ")
+        terminal_menu = TerminalMenu(adj_options)
+        menu_entry_index = terminal_menu.show()
+        if adj_options[menu_entry_index] == "no further classifications":
+            break
+        else:
+            class_inputs[adj_options[menu_entry_index]] = randint(1, 13)
+            adj_options = [c for c in adj_options if adj_options.index(c) != menu_entry_index]
+    return class_inputs

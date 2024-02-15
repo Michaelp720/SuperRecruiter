@@ -67,7 +67,7 @@ def get_difficulty(cape, action):
 
 def recruitment_success(cape, action):
     difficulty = get_difficulty(cape, action)
-    print(f"adjusted difficulty: {difficulty}")
+    #print(f"adjusted difficulty: {difficulty}")
     roll = randint(1, 20) #balancing? dnd is probaly balanced
     print(F"roll: {roll}")
     if roll == 1:
@@ -76,3 +76,8 @@ def recruitment_success(cape, action):
         return True
     else:
         return False
+
+def random_hint():
+    hints = ["Cape's on a team have more to lose!", "Tinkers always need more resources", "Capes on a Team can call for back-up!", "Villains are always on edge", "Heroes have more to lose than Villains", "Masters are often prideful", "Versatile Capes are hard to best", "Good luck cathing a Mover!", "Hard to surprise someone with extra senses", "Strangers always get the drop on you", "Tinkers need time to prepare", "Brutes aren't the brightest but are unmatched in a fight", "Blasters want to fight you at range", "There's always a trick to besting a Breaker or Changer", "Shakers get sronger as fights go on", "Trumps beat powers at their own game, or beat you with your own powers"]
+    roll = randint(1, len(hints))
+    return hints[roll-1]

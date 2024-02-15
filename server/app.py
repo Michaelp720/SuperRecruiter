@@ -6,16 +6,15 @@ from rich.text import Text
 from rich.console import Console
 from rich.columns import Columns
 from rich.panel import Panel
-from recruitment import recruitment_success
+from recruitment import recruitment_success, random_hint
 from simple_term_menu import TerminalMenu
 import time
 
 from styles import page_heading_style, villainous_page_heading_style, cape_panel, team_panel, print_recruit_success, print_recruit_failure, print_attempting_recruit
 
 # Tasks:
-# 2. don't show capes on team already in display game capes
-# 2. change create cape to work with new classification
-# 3. error routing and handling
+# 1. error handling and routing
+# 2. change class rating generation in create cape
 
 console = Console()
 
@@ -25,10 +24,9 @@ def display_welcome(): #welcome page
   time.sleep(1)
   f= open ('edited_capes.txt','r')
   print(''.join([line for line in f]))
-  time.sleep(1.5)
   print("Setting/Ideas are from the world of Parahumans: you can start reading here https://parahumans.wordpress.com/")
   print("Characters are OCs or AI generated")
-  time.sleep(1)
+  time.sleep(1.8)
   print("")
 
 def display_main_menu(): #main page
@@ -71,7 +69,7 @@ def display_capes(id, my_team): #team details page/solo capes ###############
     displayed_team = display_team(id)
     is_all = False
     
-  capes_on_team = get_capes_on_team(id)
+  capes_on_team = get_capes_on_team(id, my_team)
 
   cape_renders = [Panel(cape_panel(cape, is_all)) for cape in capes_on_team]
   console.print(Columns(cape_renders))
@@ -160,7 +158,7 @@ def start_game():
   
 def display_game_menu(my_team):
 
-  capes_on_team = get_capes_on_team(my_team.id)
+  capes_on_team = get_capes_on_team(my_team.id, my_team)
   cape_renders = [Panel(cape_panel(cape, True)) for cape in capes_on_team]
   console.print(Columns(cape_renders))
   print(f"Recruiting for [bold #EB9F25]{my_team.team_name}[/]")
@@ -177,6 +175,7 @@ def get_game_choice():
 def attempt_recruitment(target_cape, my_team):
   console.print(Panel(cape_panel(target_cape, True)))
   print(f"   [bold #EB9F25]POWERS[/]: {target_cape.powers}")
+  print(random_hint())
   print("")
   print(f"How will you try to recruit {target_cape.cape_name}?")
   action_choice = get_action_choice()
@@ -248,6 +247,7 @@ def attempt_recruitment(target_cape, my_team):
       failure_msg = f'Your {villain_flair}attempt to {action_msg} {allignment_msg}'
     print(f"[#A1B8CE]{target_cape.cape_name}[/]:")
     print_recruit_failure(color, failure_msg)
+    print("[bold red]failure[/]")
   print("")
   display_game_menu(my_team)
 
