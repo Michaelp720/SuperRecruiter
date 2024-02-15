@@ -12,7 +12,9 @@ villainous_page_heading_style = Style(color = "#872667", bold = True)
 #colors
 #Heros and menu titles: #E4C31C
 #Villains: #872667
+#my team/game: #EB9F25
 #options: green
+#background/kinda grey: #A1B8CE
 
 def cape_panel(cape, is_all):
     id = cape.id

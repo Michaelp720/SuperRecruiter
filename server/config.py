@@ -4,6 +4,7 @@ from sqlalchemy import MetaData
 from flask_migrate import Migrate
 from dotenv import load_dotenv
 import os
+import json
 
 load_dotenv()
 
