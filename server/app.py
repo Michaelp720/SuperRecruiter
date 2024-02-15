@@ -175,7 +175,8 @@ def get_game_choice():
 def attempt_recruitment(target_cape, my_team):
   console.print(Panel(cape_panel(target_cape, True)))
   print(f"   [bold #EB9F25]POWERS[/]: {target_cape.powers}")
-  print(random_hint())
+  print("")
+  print(f"PRT FILE HINT: {random_hint()}")
   print("")
   print(f"How will you try to recruit {target_cape.cape_name}?")
   action_choice = get_action_choice()
