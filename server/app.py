@@ -226,7 +226,7 @@ def attempt_recruitment(target_cape, my_team):
       elif target_cape.allignment == "Villainous": 
         failure_msg_end = "end you right here."
         color = "#872667"
-      #slow print  
+  
       failure_msg = f"'You're lucky I don't {failure_msg_end}'"
     elif action_type == "persuade":
       if target_cape.allignment == "Heroic":
@@ -243,7 +243,7 @@ def attempt_recruitment(target_cape, my_team):
         action_msg = "pressure me"
       elif action_choice == "bribe":
         action_msg = "buy me off"
-      #slow print 
+
       failure_msg = f'Your {villain_flair}attempt to {action_msg} {allignment_msg}'
     print(f"[#A1B8CE]{target_cape.cape_name}[/]:")
     print_recruit_failure(color, failure_msg)
@@ -258,7 +258,7 @@ def get_action_choice():
   return action_options[menu_entry_index]
 
 def start_main_menu():
-  #print_attempting_recruit("defeat", "Fallen Angel")
+
   while True:
       display_main_menu() #MAIN PAGE
       choice = get_main_choice()

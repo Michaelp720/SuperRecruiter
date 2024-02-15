@@ -16,7 +16,10 @@ def get_capes_on_team(id, team):
     if id == "All":
         return Cape.query.all()
     elif id == "game":
-        return Cape.query.filter(Cape.team_id != team.id)
+        #print(f"team id: {team.id}")
+        queries = Cape.query.all()
+        queries = [query for query in queries if query.team_id != team.id]
+        return queries
     else:
         return Cape.query.filter(Cape.team_id == id)    
 
