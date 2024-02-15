@@ -12,9 +12,10 @@ from simple_term_menu import TerminalMenu
 from styles import page_heading_style, cape_panel, team_panel
 
 # Tasks:
+# 1. squash some routing bugs
 # 1. add slow print and pause before success/failure
-# 1. change create cape to work with new classification
-# 2. error routing and handling
+# 2. change create cape to work with new classification
+# 3. error routing and handling
 
 console = Console()
 
@@ -133,7 +134,7 @@ def display_cape_details(id, team, team_id): #cape details page
   print("other: return to main menu")
   choice = get_cape_dets_choice()
   if choice == "1":
-    display_capes(team_id, None)
+    display_capes(team_id, team)
   elif choice == "2":
     change_capes_team(cape)
   elif choice == "-":
@@ -166,7 +167,7 @@ def attempt_recruitment(target_cape, my_team):
   console.print(Panel(cape_panel(target_cape, True)))
   print(f"How will you try to recruit {target_cape.cape_name}?")
   action_choice = get_action_choice()
-  success = recruitment_success(target_cape, action_choice())
+  success = recruitment_success(target_cape, action_choice)
 
   if success:
     if action_choice == "ambush" or action_choice == "outwit" or action_choice == "overpower":
