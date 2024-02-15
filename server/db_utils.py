@@ -38,7 +38,7 @@ def change_capes_team(cape):
     return cape.team_id
 
 def delete_cape(cape):
-    print(f"{cape.name} deleted")
+    print(f"{cape.cape_name} deleted")
     Cape.query.filter(Cape.id == cape.id).delete()
     db.session.commit()
 
