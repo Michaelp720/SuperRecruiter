@@ -15,6 +15,7 @@ from styles import page_heading_style, villainous_page_heading_style, cape_panel
 # Tasks:
 # 1. error handling and routing
 # 2. change class rating generation in create cape
+# 3. clean up naming in display capes
 
 console = Console()
 
@@ -253,9 +254,13 @@ def attempt_recruitment(target_cape, my_team):
   display_game_menu(my_team)
 
 def get_action_choice():
-  action_options = ("ambush", "outwit", "overpower", "convince", "extort", "bribe")
+  action_options = ("ambush", "outwit", "overpower", "convince", "extort", "bribe", "Consult PRT files")
   terminal_menu = TerminalMenu(action_options)
   menu_entry_index = terminal_menu.show()
+  while action_options[menu_entry_index] == "Consult PRT files":
+    print(f"PRT FILE HINT: {random_hint()}")
+    print("")
+    menu_entry_index = terminal_menu.show()
   return action_options[menu_entry_index]
 
 def start_main_menu():
