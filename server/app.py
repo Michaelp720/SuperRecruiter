@@ -56,7 +56,7 @@ def display_capes(id, my_team): #team details page/solo capes ###############
   print("")
   if not id:
     displayed_team = "solo capes"
-    is_all = False
+    is_all = True
     print("[bold]Solo Capes[/]")
   elif id == "All":
     displayed_team = "all capes"
@@ -94,7 +94,7 @@ def display_capes(id, my_team): #team details page/solo capes ###############
     print("[bold green]other[/]: quit app") #bug? or feature ;)
     choice = get_cape_choice()
     if choice == "+":
-      display_capes(create_cape(id), None)
+      display_capes(create_cape(id), my_team)
     elif choice == "r":
       #display_capes("game", my_team)
       display_game_menu(my_team)
