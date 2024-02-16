@@ -80,3 +80,4 @@ def print_recruit_failure(color, msg):
         time.sleep(delay) 
     time.sleep(2)
     
+
